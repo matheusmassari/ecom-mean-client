@@ -4,7 +4,7 @@
             <div class="p-col-12">
                 <p-toolbar>
                     <div class="p-toolbar-group-left">
-                        <p-button label="New" icon="pi pi-plus" styleClass="p-button-success"></p-button>
+                        <p-button label="New" icon="pi pi-plus" styleClass="p-button-success" routerLink="form" ></p-button>
                     </div>
                 </p-toolbar>
             </div>
@@ -19,7 +19,7 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-category>
                         <tr>
-                            <td>{{ category.id }}</td>
+                            <td>{{ category._id }}</td>
                             <td>{{ category.name }}</td>
                             <td>{{ category.icon }}</td>
                         </tr>
