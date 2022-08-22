@@ -16,6 +16,7 @@ export class CategoriesFormComponent implements OnInit {
     isSubmitted = false;
     editMode = false;
     currentCategoryId: string;
+    color: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -26,9 +27,10 @@ export class CategoriesFormComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.form = this.formBuilder.group({            
+        this.form = this.formBuilder.group({
             name: ['', Validators.required],
-            icon: ['', Validators.required]
+            icon: ['', Validators.required],
+            color: ['#fff', Validators.required]
         });
         this._checkEditMode();
     }
@@ -41,7 +43,8 @@ export class CategoriesFormComponent implements OnInit {
         const category: Category = {
             id: this.currentCategoryId,
             name: this.categoryForm.name.value,
-            icon: this.categoryForm.icon.value
+            icon: this.categoryForm.icon.value,
+            color: this.categoryForm.color.value
         };
         if (this.editMode) {
             this._updateCategory(category);
@@ -56,11 +59,11 @@ export class CategoriesFormComponent implements OnInit {
 
     private _createCategory(category: Category) {
         this.categoriesService.createCategory(category).subscribe(
-            () => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category added.' });
+            (category: Category) => {
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Category ${category.name} added.` });
                 timer(2000)
                     .toPromise()
-                    .then((done) => {
+                    .then(() => {
                         this.location.back();
                     });
             },
@@ -94,6 +97,7 @@ export class CategoriesFormComponent implements OnInit {
                 this.categoriesService.getSingleCategory(params.id).subscribe((category) => {
                     this.categoryForm.name.setValue(category.name);
                     this.categoryForm.icon.setValue(category.icon);
+                    this.categoryForm.color.setValue(category.color);
                 });
             }
         });

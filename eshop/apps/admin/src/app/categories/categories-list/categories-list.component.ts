@@ -36,16 +36,16 @@ export class CategoriesListComponent implements OnInit {
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.categoriesService.deleteCategory(_id).subscribe(
-                    (response) => {
+                    () => {
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category removed.' });
                         this._getCategories();
                     },
-                    (error) => {
+                    () => {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong, try again later.' });
                     }
                 );
             },
-            reject: (type) => {}
+            
         });
     }
 
