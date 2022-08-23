@@ -30,12 +30,13 @@ export class CategoriesFormComponent implements OnInit {
         this.form = this.formBuilder.group({
             name: ['', Validators.required],
             icon: ['', Validators.required],
-            color: ['#fff', Validators.required]
+            color: ['#fff']
         });
         this._checkEditMode();
     }
 
     onSubmit() {
+        console.log(this.form.invalid);
         this.isSubmitted = true;
         if (this.form.invalid) {
             return;
@@ -58,6 +59,7 @@ export class CategoriesFormComponent implements OnInit {
     }
 
     private _createCategory(category: Category) {
+        console.log('criar categoria');
         this.categoriesService.createCategory(category).subscribe(
             (category: Category) => {
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: `Category ${category.name} added.` });
