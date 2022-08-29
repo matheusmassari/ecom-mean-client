@@ -27,6 +27,8 @@ import { MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ColorPickerModule } from 'primeng/colorpicker';
+import { ProductsFormComponent } from './pages/products/products-form/products-form.component';
+import { ProductsListComponent } from './pages/products/products-list/products-list.component';
 
 const UX_MODULE = [CardModule, ToolbarModule, ButtonModule, TableModule, InputTextModule, ToastModule, ConfirmDialogModule, ColorPickerModule];
 
@@ -50,13 +52,25 @@ const routes: Routes = [
             {
                 path: 'categories/form/:id',
                 component: CategoriesFormComponent
+            },
+            {
+                path: 'products',
+                component: ProductsListComponent
+            },
+            {
+                path: 'products/form',
+                component: ProductsFormComponent
+            },
+            {
+                path: 'products/form/:id',
+                component: ProductsFormComponent
             }
         ]
     }
 ];
 
 @NgModule({
-    declarations: [AppComponent, ShellComponent, SidebarComponent, DashboardComponent, CategoriesListComponent, CategoriesFormComponent],
+    declarations: [AppComponent, ShellComponent, SidebarComponent, DashboardComponent, CategoriesListComponent, CategoriesFormComponent, ProductsFormComponent, ProductsListComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
