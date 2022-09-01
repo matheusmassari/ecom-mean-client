@@ -29,8 +29,19 @@ import { ConfirmationService } from 'primeng/api';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { ProductsFormComponent } from './pages/products/products-form/products-form.component';
 import { ProductsListComponent } from './pages/products/products-list/products-list.component';
+import { InputNumberModule } from 'primeng/inputnumber';
 
-const UX_MODULE = [CardModule, ToolbarModule, ButtonModule, TableModule, InputTextModule, ToastModule, ConfirmDialogModule, ColorPickerModule];
+const UX_MODULE = [
+    CardModule,
+    ToolbarModule,
+    ButtonModule,
+    TableModule,
+    InputTextModule,
+    ToastModule,
+    ConfirmDialogModule,
+    ColorPickerModule,
+    InputNumberModule
+];
 
 const routes: Routes = [
     {

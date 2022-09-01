@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CategoriesService, Category } from '@eshop/products';
+import { ProductsService, Product } from '@eshop/products';
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 
@@ -9,35 +9,35 @@ import { ConfirmationService } from 'primeng/api';
     templateUrl: './products-list.component.html'
 })
 export class ProductsListComponent implements OnInit {
-    categories: Category[] = [];
+    products: Product[] = [];
 
     constructor(
-        private categoriesService: CategoriesService,
+        private productsService: ProductsService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private router: Router
     ) {}
 
     ngOnInit(): void {
-        this._getCategories();
+        this._getProducts();
     }
 
-    private _getCategories() {
-        this.categoriesService.getCategories().subscribe((categories) => {
-            this.categories = categories;
+    private _getProducts() {
+        this.productsService.getProducts().subscribe((products) => {
+            this.products = products;
         });
     }
 
-    deleteCategory(_id: any) {
+    deleteProduct(_id: any) {
         this.confirmationService.confirm({
             message: 'Are you sure that you want to delete this category?',
             header: 'Delete Category',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.categoriesService.deleteCategory(_id).subscribe(
+                this.productsService.deleteProduct(_id).subscribe(
                     () => {
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category removed.' });
-                        this._getCategories();
+                        this._getProducts();
                     },
                     () => {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong, try again later.' });
@@ -47,7 +47,7 @@ export class ProductsListComponent implements OnInit {
         });
     }
 
-    updateCategory(_id: any) {
-        this.router.navigateByUrl(`categories/form/${_id}`);
+    updateProduct(_id: any) {
+        this.router.navigateByUrl(`products/form/${_id}`);
     }
 }

@@ -9,7 +9,7 @@ import { environment } from '@env/environment';
 })
 export class CategoriesService {
 
-    // BASE URL DE CATEGORIAS \/ \/
+    // BASE URL DE CATEGORIAS
     apiUrlCategories = environment.apiURL + 'categories'
 
     constructor(private http: HttpClient) {}

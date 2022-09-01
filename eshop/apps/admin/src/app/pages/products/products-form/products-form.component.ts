@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { CategoriesService, Category } from '@eshop/products';
+import { ProductsService, Product } from '@eshop/products';
 import { MessageService } from 'primeng/api';
 import { timer } from 'rxjs';
 
@@ -14,23 +14,19 @@ export class ProductsFormComponent implements OnInit {
     form: FormGroup;
     isSubmitted = false;
     editMode = false;
-    currentCategoryId: string;
+    currentProductId: string;
     color: string;
 
     constructor(
         private formBuilder: FormBuilder,
-        private categoriesService: CategoriesService,
+        private productsService: ProductsService,
         private messageService: MessageService,
         private location: Location,
         private router: ActivatedRoute
     ) {}
 
     ngOnInit(): void {
-        this.form = this.formBuilder.group({
-            name: ['', Validators.required],
-            icon: ['', Validators.required],
-            color: ['#fff']
-        });
+        this._initForm();
         this._checkEditMode();
     }
 
@@ -40,28 +36,21 @@ export class ProductsFormComponent implements OnInit {
         if (this.form.invalid) {
             return;
         }
-        const category: Category = {
-            id: this.currentCategoryId,
-            name: this.categoryForm.name.value,
-            icon: this.categoryForm.icon.value,
-            color: this.categoryForm.color.value
+        const product: Product = {
+            id: this.currentProductId,
+            name: this.productForm.name.value
         };
         if (this.editMode) {
-            this._updateCategory(category);
+            this._updateProduct(product);
         } else {
-            this._createCategory(category);
+            this._createProduct(product);
         }
     }
 
-    get categoryForm() {
-        return this.form.controls;
-    }
-
-    private _createCategory(category: Category) {
-        console.log('criar categoria');
-        this.categoriesService.createCategory(category).subscribe(
-            (category: Category) => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Category ${category.name} added.` });
+    private _createProduct(product: Product) {
+        this.productsService.createProduct(product).subscribe(
+            (product: Product) => {
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Category ${product.name} added.` });
                 timer(2000)
                     .toPromise()
                     .then(() => {
@@ -69,15 +58,15 @@ export class ProductsFormComponent implements OnInit {
                     });
             },
             () => {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register category' });
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register product' });
             }
         );
     }
 
-    private _updateCategory(category: Category) {
-        this.categoriesService.updateCategory(category).subscribe(
+    private _updateProduct(product: Product) {
+        this.productsService.updateProduct(product).subscribe(
             () => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category updated.' });
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Product updated.' });
                 timer(2000)
                     .toPromise()
                     .then((done) => {
@@ -94,13 +83,31 @@ export class ProductsFormComponent implements OnInit {
         this.router.params.subscribe((params) => {
             if (params.id) {
                 this.editMode = true;
-                this.currentCategoryId = params.id;
-                this.categoriesService.getSingleCategory(params.id).subscribe((category) => {
-                    this.categoryForm.name.setValue(category.name);
-                    this.categoryForm.icon.setValue(category.icon);
-                    this.categoryForm.color.setValue(category.color);
+                this.currentProductId = params.id;
+                this.productsService.getSingleProduct(params.id).subscribe((product) => {
+                    this.productForm.name.setValue(product.name);
+                    // this.productForm.icon.setValue(product.icon);
+                    // this.productForm.color.setValue(product.color);
                 });
             }
         });
+    }
+
+    private _initForm() {
+        this.form = this.formBuilder.group({
+            name: ['', Validators.required],
+            brand: ['', Validators.required],
+            price: ['', Validators.required],
+            category: ['', Validators.required],
+            countInStock: ['', Validators.required],
+            description: ['', Validators.required],
+            richDescription: [''],
+            image: [''],
+            isFeatured: ['']
+        });
+    }
+
+    get productForm() {
+        return this.form.controls;
     }
 }
