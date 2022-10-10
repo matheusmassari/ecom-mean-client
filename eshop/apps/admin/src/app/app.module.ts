@@ -30,6 +30,10 @@ import { ColorPickerModule } from 'primeng/colorpicker';
 import { ProductsFormComponent } from './pages/products/products-form/products-form.component';
 import { ProductsListComponent } from './pages/products/products-list/products-list.component';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputSwitchModule } from 'primeng/inputswitch';
+
+
 
 const UX_MODULE = [
     CardModule,
@@ -40,7 +44,9 @@ const UX_MODULE = [
     ToastModule,
     ConfirmDialogModule,
     ColorPickerModule,
-    InputNumberModule
+    InputNumberModule,
+    InputTextareaModule,
+    InputSwitchModule
 ];
 
 const routes: Routes = [
