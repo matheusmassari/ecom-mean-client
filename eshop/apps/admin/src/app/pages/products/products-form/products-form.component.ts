@@ -11,13 +11,13 @@ import { timer } from 'rxjs';
     templateUrl: './products-form.component.html'
 })
 export class ProductsFormComponent implements OnInit {
-
     form: FormGroup;
     isSubmitted = false;
     editMode = false;
     currentProductId: string;
     color: string;
     categories: any[];
+    imageDisplay: string | ArrayBuffer;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -31,7 +31,7 @@ export class ProductsFormComponent implements OnInit {
     ngOnInit(): void {
         this._initForm();
         this._checkEditMode();
-        this._getCategories();        
+        this._getCategories();
     }
 
     onSubmit() {
@@ -113,11 +113,26 @@ export class ProductsFormComponent implements OnInit {
     private _getCategories() {
         this.categoriesService.getCategories().subscribe({
             next: (categories) => {
-                this.categories = categories
-console.log(this.categories);
+                this.categories = categories;                
             },
             error: () => alert('Something went wrong while trying to get categories.')
         });
+    }
+
+    onImageUpload(event) {
+        const file = (event.target as HTMLInputElement).files[0];
+        if(file) {
+            this.form.patchValue({
+                image: file
+            });
+            this.form.get('image').updateValueAndValidity();
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.imageDisplay = reader.result;
+            }
+            reader.readAsDataURL(file);
+        }
+        
     }
 
     get productForm() {
