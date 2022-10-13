@@ -30,8 +30,8 @@ export class ProductsListComponent implements OnInit {
 
     deleteProduct(_id: any) {
         this.confirmationService.confirm({
-            message: 'Are you sure that you want to delete this category?',
-            header: 'Delete Category',
+            message: 'Are you sure that you want to delete this product?',
+            header: 'Delete Product',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.productsService.deleteProduct(_id).subscribe(

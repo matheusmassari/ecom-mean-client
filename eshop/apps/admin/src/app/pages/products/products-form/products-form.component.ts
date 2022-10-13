@@ -34,6 +34,20 @@ export class ProductsFormComponent implements OnInit {
         this._checkEditMode();
     }
 
+    private _initForm() {
+        this.form = this.formBuilder.group({
+            name: ['', Validators.required],
+            brand: ['', Validators.required],
+            price: ['', Validators.required],
+            category: ['', Validators.required],
+            countInStock: ['', Validators.required],
+            description: ['', Validators.required],
+            richDescription: [''],
+            image: ['', Validators.required],
+            isFeatured: [false]
+        });
+    }
+
     onSubmit() {
         this.isSubmitted = true;
         if (this.form.invalid) {
@@ -44,14 +58,17 @@ export class ProductsFormComponent implements OnInit {
         Object.keys(this.productForm).map((key) => {
             productFormData.append(key, this.productForm[key].value);
         });
-
-        this._createProduct(productFormData);
+        if (this.editMode) {
+            this._updateProduct(productFormData);
+        } else {
+            this._createProduct(productFormData);
+        }
     }
 
     private _createProduct(productData) {
         this.productsService.createProduct(productData).subscribe(
-            (product: Product) => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product ${product.name} added.` });
+            () => {
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product added.` });
                 timer(2000)
                     .toPromise()
                     .then(() => {
@@ -64,18 +81,18 @@ export class ProductsFormComponent implements OnInit {
         );
     }
 
-    private _updateProduct(product: Product) {
-        this.productsService.updateProduct(product).subscribe(
+    private _updateProduct(productData) {
+        this.productsService.updateProduct(productData, this.currentProductId).subscribe(
             () => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Product updated.' });
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product updated.` });
                 timer(2000)
                     .toPromise()
-                    .then((done) => {
+                    .then(() => {
                         this.location.back();
                     });
             },
             () => {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register category' });
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register product' });
             }
         );
     }
@@ -87,24 +104,18 @@ export class ProductsFormComponent implements OnInit {
                 this.currentProductId = params.id;
                 this.productsService.getSingleProduct(params.id).subscribe((product) => {
                     this.productForm.name.setValue(product.name);
-                    // this.productForm.icon.setValue(product.icon);
-                    // this.productForm.color.setValue(product.color);
+                    this.productForm.brand.setValue(product.brand);
+                    this.productForm.price.setValue(product.price);
+                    this.productForm.category.setValue(product.category.id);
+                    this.productForm.countInStock.setValue(product.countInStock);
+                    this.productForm.description.setValue(product.description);
+                    this.productForm.richDescription.setValue(product.richDescription);
+                    this.productForm.isFeatured.setValue(product.isFeatured);
+                    this.imageDisplay = product.image;
+                    this.productForm.image.setValidators([]);
+                    this.productForm.image.updateValueAndValidity();
                 });
             }
-        });
-    }
-
-    private _initForm() {
-        this.form = this.formBuilder.group({
-            name: ['', Validators.required],
-            brand: ['', Validators.required],
-            price: ['', Validators.required],
-            category: ['', Validators.required],
-            countInStock: ['', Validators.required],
-            description: ['', Validators.required],
-            richDescription: [''],
-            image: [''],
-            isFeatured: [false]
         });
     }
 
@@ -118,7 +129,7 @@ export class ProductsFormComponent implements OnInit {
     }
 
     onImageUpload(event) {
-        const file = (event.target).files[0];
+        const file = event.target.files[0];
         if (file) {
             this.form.patchValue({
                 image: file

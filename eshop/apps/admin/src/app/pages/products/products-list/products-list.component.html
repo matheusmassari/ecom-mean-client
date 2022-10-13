@@ -14,7 +14,14 @@
                 </p-toolbar>
             </div>
             <div class="p-col-12">
-                <p-table [value]="products" responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+                <p-table
+                    [value]="products"
+                    responsiveLayout="scroll"
+                    styleClass="p-datatable-gridlines"
+                    [paginator]="true"
+                    [rows]="10"
+                    [rowsPerPageOptions]="[10, 25, 50]"
+                >
                     <ng-template pTemplate="header">
                         <tr>
                             <th pSortableColumn="name">Name<p-sortIcon field="name"></p-sortIcon></th>
@@ -29,18 +36,18 @@
                     <ng-template pTemplate="body" let-product>
                         <tr>
                             <td>{{ product.name }}</td>
-                            <td><img [src]="product.image" style="width: 100%;" alt="product-image"></td>
+                            <td><img [src]="product.image" style="width: 100%" alt="product-image" /></td>
                             <td>{{ product.price }}</td>
                             <td>{{ product.countInStock }}</td>
                             <td>{{ product?.category?.name }}</td>
                             <td>{{ product.dateCreated | date: 'short' }}</td>
                             <td>
-                                <p-button (click)="deleteProduct(product._id)" icon="pi pi-trash" styleClass="p-button-danger p-button-outlined p-mr-2"></p-button>
                                 <p-button
-                                    (click)="updateProduct(product._id)"
-                                    icon="pi pi-pencil"
-                                    styleClass="p-button-secondary p-button-outlined"
+                                    (click)="deleteProduct(product._id)"
+                                    icon="pi pi-trash"
+                                    styleClass="p-button-danger p-button-outlined p-mr-2"
                                 ></p-button>
+                                <p-button (click)="updateProduct(product._id)" icon="pi pi-pencil" styleClass="p-button-secondary p-button-outlined"></p-button>
                             </td>
                         </tr>
                     </ng-template>

@@ -78,6 +78,7 @@
                             <div class="p-col-2 p-mt-2 p-pl-0">
                                 <img style="width: 100%; border-radius: 4px" [src]="imageDisplay" alt="" />
                             </div>
+                            <small *ngIf="productForm.image.invalid && isSubmitted" class="p-error">Image is required.</small>
                         </div>
                     </div>
                 </form>
