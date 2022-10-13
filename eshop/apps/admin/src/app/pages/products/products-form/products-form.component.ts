@@ -30,8 +30,8 @@ export class ProductsFormComponent implements OnInit {
 
     ngOnInit(): void {
         this._initForm();
-        this._checkEditMode();
         this._getCategories();
+        this._checkEditMode();
     }
 
     onSubmit() {
@@ -39,21 +39,19 @@ export class ProductsFormComponent implements OnInit {
         if (this.form.invalid) {
             return;
         }
-        const product: Product = {
-            id: this.currentProductId,
-            name: this.productForm.name.value
-        };
-        if (this.editMode) {
-            this._updateProduct(product);
-        } else {
-            this._createProduct(product);
-        }
+        const productFormData = new FormData();
+
+        Object.keys(this.productForm).map((key) => {
+            productFormData.append(key, this.productForm[key].value);
+        });
+
+        this._createProduct(productFormData);
     }
 
-    private _createProduct(product: Product) {
-        this.productsService.createProduct(product).subscribe(
+    private _createProduct(productData) {
+        this.productsService.createProduct(productData).subscribe(
             (product: Product) => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Category ${product.name} added.` });
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product ${product.name} added.` });
                 timer(2000)
                     .toPromise()
                     .then(() => {
@@ -106,22 +104,22 @@ export class ProductsFormComponent implements OnInit {
             description: ['', Validators.required],
             richDescription: [''],
             image: [''],
-            isFeatured: ['']
+            isFeatured: [false]
         });
     }
 
     private _getCategories() {
         this.categoriesService.getCategories().subscribe({
             next: (categories) => {
-                this.categories = categories;                
+                this.categories = categories;
             },
             error: () => alert('Something went wrong while trying to get categories.')
         });
     }
 
     onImageUpload(event) {
-        const file = (event.target as HTMLInputElement).files[0];
-        if(file) {
+        const file = (event.target).files[0];
+        if (file) {
             this.form.patchValue({
                 image: file
             });
@@ -129,10 +127,9 @@ export class ProductsFormComponent implements OnInit {
             const reader = new FileReader();
             reader.onload = () => {
                 this.imageDisplay = reader.result;
-            }
+            };
             reader.readAsDataURL(file);
         }
-        
     }
 
     get productForm() {

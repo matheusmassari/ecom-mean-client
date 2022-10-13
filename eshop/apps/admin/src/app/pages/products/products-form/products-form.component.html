@@ -52,6 +52,7 @@
                                 [options]="categories"
                                 placeholder="Select category"
                                 optionLabel="name"
+                                optionValue="_id"
                                 [filter]="true"
                                 filterBy="name"
                                 [showClear]="true"
@@ -75,7 +76,7 @@
                             <div class="p-mb-2"><label for="name">Main Image</label></div>
                             <input type="file" class="p-inputtext" accept="image/*" (change)="onImageUpload($event)" />
                             <div class="p-col-2 p-mt-2 p-pl-0">
-                                <img style="width: 100%; border-radius: 4px;" [src]="imageDisplay" alt="" />
+                                <img style="width: 100%; border-radius: 4px" [src]="imageDisplay" alt="" />
                             </div>
                         </div>
                     </div>
