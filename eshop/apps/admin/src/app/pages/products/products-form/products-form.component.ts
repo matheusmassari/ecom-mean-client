@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ProductsService, Product } from '@eshop/products';
+import { ProductsService, Product, CategoriesService } from '@eshop/products';
 import { MessageService } from 'primeng/api';
 import { timer } from 'rxjs';
 
@@ -11,15 +11,18 @@ import { timer } from 'rxjs';
     templateUrl: './products-form.component.html'
 })
 export class ProductsFormComponent implements OnInit {
+
     form: FormGroup;
     isSubmitted = false;
     editMode = false;
     currentProductId: string;
     color: string;
+    categories: any[];
 
     constructor(
         private formBuilder: FormBuilder,
         private productsService: ProductsService,
+        private categoriesService: CategoriesService,
         private messageService: MessageService,
         private location: Location,
         private router: ActivatedRoute
@@ -28,10 +31,10 @@ export class ProductsFormComponent implements OnInit {
     ngOnInit(): void {
         this._initForm();
         this._checkEditMode();
+        this._getCategories();        
     }
 
     onSubmit() {
-        console.log(this.form.invalid);
         this.isSubmitted = true;
         if (this.form.invalid) {
             return;
@@ -104,6 +107,16 @@ export class ProductsFormComponent implements OnInit {
             richDescription: [''],
             image: [''],
             isFeatured: ['']
+        });
+    }
+
+    private _getCategories() {
+        this.categoriesService.getCategories().subscribe({
+            next: (categories) => {
+                this.categories = categories
+console.log(this.categories);
+            },
+            error: () => alert('Something went wrong while trying to get categories.')
         });
     }
 

@@ -47,16 +47,29 @@
                         </div>
                         <div class="p-field p-col-4">
                             <label for="category">Category</label>
+                            <p-dropdown
+                                formControlName="category"
+                                [options]="categories"
+                                placeholder="Select category"
+                                optionLabel="name"
+                                [filter]="true"
+                                filterBy="name"
+                                [showClear]="true"
+                            ></p-dropdown>
                             <small *ngIf="productForm.category.invalid && isSubmitted" class="p-error">Category is required.</small>
                         </div>
                         <div class="p-field p-col-4">
-                            <label for="featured">Featured</label><br>
-                            <p-inputSwitch formControlName="isFeatured"></p-inputSwitch>                            
+                            <label for="featured">Featured</label><br />
+                            <p-inputSwitch formControlName="isFeatured"></p-inputSwitch>
                         </div>
                         <div class="p-field p-col-12">
                             <label for="description">Description</label>
-                            <textarea formControlName="description" pInputTextarea id="description" [rows]="7" [cols]="30" ></textarea>
+                            <textarea formControlName="description" pInputTextarea id="description" [rows]="7" [cols]="30"></textarea>
                             <small *ngIf="productForm.description.invalid && isSubmitted" class="p-error">Description is required.</small>
+                        </div>
+                        <div class="p-field p-col-12">
+                            <label for="richDescription">Product Details</label><br />
+                            <p-editor formControlName="richDescription" [style]="{ height: '320px' }"></p-editor>
                         </div>
                     </div>
                 </form>
