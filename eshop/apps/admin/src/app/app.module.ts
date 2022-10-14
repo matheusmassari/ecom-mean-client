@@ -13,6 +13,8 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { CategoriesListComponent } from './pages/categories/categories-list/categories-list.component';
 import { CategoriesService } from '@eshop/products';
+import { UsersListComponent } from './pages/users/users-list/users-list.component';
+import { UsersFormComponent } from './pages/users/users-form/users-form.component';
 
 //UX Modules (PrimeNG)
 import { CardModule } from 'primeng/card';
@@ -85,13 +87,36 @@ const routes: Routes = [
             {
                 path: 'products/form/:id',
                 component: ProductsFormComponent
+            },
+            {
+                path: 'users',
+                component: UsersListComponent
+            },
+            {
+                path: 'users/form',
+                component: UsersFormComponent
+            },
+            {
+                path: 'users/form/:id',
+                component: UsersFormComponent
             }
         ]
     }
 ];
 
 @NgModule({
-    declarations: [AppComponent, ShellComponent, SidebarComponent, DashboardComponent, CategoriesListComponent, CategoriesFormComponent, ProductsFormComponent, ProductsListComponent],
+    declarations: [
+        AppComponent,
+        ShellComponent,
+        SidebarComponent,
+        DashboardComponent,
+        CategoriesListComponent,
+        CategoriesFormComponent,
+        ProductsFormComponent,
+        ProductsListComponent,
+        UsersListComponent,
+        UsersFormComponent,        
+    ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
