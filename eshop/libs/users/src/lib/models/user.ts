@@ -10,4 +10,5 @@ export class User {
     country?: string;
     phone?: string;
     isAdmin?: boolean;
+    token?: string;
 }

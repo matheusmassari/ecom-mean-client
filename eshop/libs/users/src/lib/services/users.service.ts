@@ -22,14 +22,14 @@ export class UsersService {
     }
 
     createUser(user: User): Observable<User> {
-        return this.http.post<User>(this.apiUrlUsers + '/', user);
+        return this.http.post<User>(this.apiUrlUsers + '/register', user);
     }
 
-    updateUser(user: User): Observable<User> {
-        return this.http.put<User>(`${this.apiUrlUsers}/${user.id}`, user);
+    updateUser(user: any, userId: any): Observable<User> {
+        return this.http.put<User>(`${this.apiUrlUsers}/${userId}`, user);
     }
 
-    deleteUser(userId: string) {
+    deleteUser(userId: any) {
         return this.http.delete(`${this.apiUrlUsers}/${userId}`);
     }
 }

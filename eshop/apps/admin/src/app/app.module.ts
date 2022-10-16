@@ -36,8 +36,9 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
-
-
+import { TagModule } from 'primeng/tag';
+import { PasswordModule } from 'primeng/password';
+import { InputMaskModule } from 'primeng/inputmask';
 
 const UX_MODULE = [
     CardModule,
@@ -52,7 +53,10 @@ const UX_MODULE = [
     InputTextareaModule,
     InputSwitchModule,
     DropdownModule,
-    EditorModule
+    EditorModule,
+    TagModule,
+    PasswordModule,
+    InputMaskModule
 ];
 
 const routes: Routes = [
@@ -115,7 +119,7 @@ const routes: Routes = [
         ProductsFormComponent,
         ProductsListComponent,
         UsersListComponent,
-        UsersFormComponent,        
+        UsersFormComponent
     ],
     imports: [
         BrowserModule,
