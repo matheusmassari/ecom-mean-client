@@ -29,7 +29,7 @@ export class UsersService {
         return this.http.put<User>(`${this.apiUrlUsers}/${userId}`, user);
     }
 
-    deleteUser(userId: any) {
+    deleteUser(userId: any) {        
         return this.http.delete(`${this.apiUrlUsers}/${userId}`);
     }
 }

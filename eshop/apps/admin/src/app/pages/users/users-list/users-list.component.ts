@@ -33,26 +33,34 @@ export class UsersListComponent implements OnInit {
         });
     }
 
-    private _updateUser(_id: any) {
+    updateUser(_id: string) {
         this.router.navigateByUrl(`users/form/${_id}`);
     }
 
-    private _deleteUser(_id: any) {
+    deleteUser(userId: string) {
         this.confirmationService.confirm({
             message: 'Are you sure that you want to delete this user?',
             header: 'Delete User',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.usersService.deleteUser(_id).subscribe({
-                    next: () => {
-                        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User removed.' });
+                this.usersService.deleteUser(userId).subscribe(
+                    () => {
                         this._getUsers();
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: 'User is deleted!'
+                        });
                     },
-                    error: (error) => {
+                    (error) => {
                         console.log(error)
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong, try again later.' });
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'User is not deleted!'
+                        });
                     }
-                });
+                );
             }
         });
     }

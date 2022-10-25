@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
     styleUrls: []
 })
 export class UsersFormComponent implements OnInit {
+
     form: FormGroup;
     isSubmitted = false;
     editMode = false;
@@ -29,25 +30,12 @@ export class UsersFormComponent implements OnInit {
         this._checkEditMode();
     }
 
-    onSubmit() {
-        this.isSubmitted = true;
-        if (this.form.invalid) {
-            return;
-        }
-        const userData = this.form.value;
-        if (this.editMode) {
-            this._updateUser(userData);
-        } else {
-            this._createUser(userData);
-        }
-    }
-
     private _initForm() {
         this.form = this.formBuilder.group({
             name: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
-            passwordHash: ['', Validators.required],
-            phone: ['', Validators.required],
+            password: ['', Validators.required],
+            phone: [''],
             street: ['', Validators.required],
             apartment: ['', Validators.required],
             zip: ['', Validators.required],
@@ -58,13 +46,12 @@ export class UsersFormComponent implements OnInit {
     }
 
     private _createUser(userData: User) {
-        console.log(userData);
         this.usersService.createUser(userData).subscribe(
-            () => {
+            (user: User) => {
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Success',
-                    detail: 'User has been created'
+                    detail: `User has been created.`
                 });
                 timer(2000)
                     .toPromise()
@@ -73,7 +60,7 @@ export class UsersFormComponent implements OnInit {
                     });
             },
             (error) => {
-                console.log(error)
+                console.log(error);
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -84,6 +71,7 @@ export class UsersFormComponent implements OnInit {
     }
 
     private _updateUser(userData) {
+        console.log(userData)
         this.usersService.updateUser(userData, this.currentUserId).subscribe(
             () => {
                 this.messageService.add({
@@ -122,11 +110,36 @@ export class UsersFormComponent implements OnInit {
                     this.userForm.city.setValue(user.city);
                     this.userForm.country.setValue(user.country);
                     this.userForm.isAdmin.setValue(user.isAdmin);
-                    this.userForm.passwordHash.setValidators([]);
-                    this.userForm.passwordHash.updateValueAndValidity();
+
+                    this.userForm.password.setValidators([]);
+                    this.userForm.password.updateValueAndValidity();
                 });
             }
         });
+    }
+
+    onSubmit() {
+        this.isSubmitted = true;
+        if (this.form.invalid) {
+            return;
+        }
+        const user: User = {            
+            name: this.userForm.name.value,
+            email: this.userForm.email.value,
+            phone: this.userForm.phone.value,
+            isAdmin: this.userForm.isAdmin.value,
+            street: this.userForm.street.value,
+            apartment: this.userForm.apartment.value,
+            zip: this.userForm.zip.value,
+            city: this.userForm.city.value,
+            password: this.userForm.password.value,
+            country: this.userForm.country.value
+        };
+        if (this.editMode) {
+            this._updateUser(user);
+        } else {            
+            this._createUser(user);
+        }
     }
 
     get userForm() {
