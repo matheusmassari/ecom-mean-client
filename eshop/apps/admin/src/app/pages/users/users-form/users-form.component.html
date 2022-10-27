@@ -71,7 +71,16 @@
                         </div>
                         <div class="p-field p-col-4">
                             <label for="country">Country</label>
-                            <p-dropdown [options]="countries" formControlName="country" optionLabel="name" optionValue="id" [filter]="true" filterBy="name" showClear="true" > </p-dropdown>
+                            <p-dropdown
+                                [options]="countries"
+                                formControlName="country"
+                                optionLabel="name"
+                                optionValue="id"
+                                [filter]="true"
+                                filterBy="name"
+                                showClear="true"
+                            >
+                            </p-dropdown>
                             <small *ngIf="userForm.country.invalid && isSubmitted" class="p-error">Country is required.</small>
                         </div>
                     </div>

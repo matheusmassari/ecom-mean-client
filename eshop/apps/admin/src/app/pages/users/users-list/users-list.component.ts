@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { User, UsersService } from '@eshop/users';
 
+
 @Component({
     selector: 'admin-users-list',
     templateUrl: './users-list.component.html',
@@ -10,6 +11,7 @@ import { User, UsersService } from '@eshop/users';
 })
 export class UsersListComponent implements OnInit {
     users: User[] = [];
+    countries = [];
 
     constructor(
         private messageService: MessageService,
@@ -26,6 +28,7 @@ export class UsersListComponent implements OnInit {
         this.usersService.getUsers().subscribe({
             next: (users) => {
                 this.users = users;
+                console.log(this.users);
             },
             error: () => {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to get users, try again later.' });
@@ -53,7 +56,7 @@ export class UsersListComponent implements OnInit {
                         });
                     },
                     (error) => {
-                        console.log(error)
+                        console.log(error);
                         this.messageService.add({
                             severity: 'error',
                             summary: 'Error',
@@ -63,5 +66,11 @@ export class UsersListComponent implements OnInit {
                 );
             }
         });
+    }
+
+    getCountryName(countryKey: string) {
+        if (countryKey) {
+            return this.usersService.getCountry(countryKey);
+        }
     }
 }

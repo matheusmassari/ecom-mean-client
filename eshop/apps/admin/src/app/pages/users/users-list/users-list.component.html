@@ -21,6 +21,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Admin</th>
+                            <th>Country</th>
                             <th>Actions</th>
                         </tr>
                     </ng-template>
@@ -32,7 +33,9 @@
                                 <p-tag *ngIf="user.isAdmin" icon="pi pi-check" severity="success" class="p-ml-2" [rounded]="true" ></p-tag>
                                 <p-tag *ngIf="!user.isAdmin" icon="pi pi-times" severity="danger" class="p-ml-2" [rounded]="true" ></p-tag>
                             </td>
+                            <td>{{ getCountryName(user.country) }}</td>
                             <td>
+                                
                                 <p-button
                                     (click)="deleteUser(user._id)"
                                     label="Remove"

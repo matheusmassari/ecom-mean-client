@@ -152,7 +152,12 @@ export class UsersFormComponent implements OnInit {
     private _getCountries() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     countriesLib.registerLocale(require('i18n-iso-countries/langs/en.json'));
-        console.log(countriesLib.getNames('en', { select: 'official' }));
+    this.countries = Object.entries(countriesLib.getNames('en', { select: 'official' })).map((entry) => {
+        return {
+            name: entry[1],
+            id: entry[0]
+        }
+    });    
     }
 
     get userForm() {
