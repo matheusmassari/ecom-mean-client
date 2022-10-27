@@ -5,6 +5,11 @@ import { UsersService, User } from '@eshop/users';
 import { MessageService } from 'primeng/api';
 import { timer } from 'rxjs';
 import { Location } from '@angular/common';
+import * as countriesLib from "i18n-iso-countries";
+
+declare const require;
+
+
 @Component({
     selector: 'admin-users-form',
     templateUrl: './users-form.component.html',
@@ -16,6 +21,7 @@ export class UsersFormComponent implements OnInit {
     isSubmitted = false;
     editMode = false;
     currentUserId: string;
+    countries: any[] = [];
 
     constructor(
         private formBuilder: FormBuilder,
@@ -27,6 +33,7 @@ export class UsersFormComponent implements OnInit {
 
     ngOnInit(): void {
         this._initForm();
+        this._getCountries();
         this._checkEditMode();
     }
 
@@ -140,6 +147,12 @@ export class UsersFormComponent implements OnInit {
         } else {            
             this._createUser(user);
         }
+    }
+
+    private _getCountries() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    countriesLib.registerLocale(require('i18n-iso-countries/langs/en.json'));
+        console.log(countriesLib.getNames('en', { select: 'official' }));
     }
 
     get userForm() {
