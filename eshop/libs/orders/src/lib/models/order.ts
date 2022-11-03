@@ -2,7 +2,7 @@ import { User } from "@eshop/users";
 import { OrderItem } from "./order-item";
 
 export class Order {
-    id?: string;
+    _id?: string;
     orderItem?: OrderItem;
     shippingAddress1?: string;
     shippingAddress2?: string;

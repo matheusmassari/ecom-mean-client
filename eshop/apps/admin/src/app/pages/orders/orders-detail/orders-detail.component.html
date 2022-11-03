@@ -1,1 +1,41 @@
-<p>oders-detail works!</p>
+<p-toast></p-toast>
+<div class="admin-page" *ngIf="order">
+    <p-card header="View Order" subheader="You can edit order status here">
+        <p-fieldset legend="Order Details" styleClass="p-mb-4" [toggleable]="true">
+            <div class="p-grid">
+                <div class="p-col-4">
+                    <h5>Order Id</h5>
+                    <p>{{ order._id }}</p>
+                </div>
+                <div class="p-col-4">
+                    <h5>Order Date</h5>
+                    <p>{{ order.dateOrdered | date: 'short' }}</p>
+                </div>
+                <div class="p-col-4">
+                    <h5>Order status</h5>
+                    <p-dropdown></p-dropdown>
+                </div>
+                <div class="p-col-4">{{ order.totalPrice | currency }}</div>
+            </div>
+        </p-fieldset>
+        <p-fieldset legend="Order Items" styleClass="p-mb-4" [toggleable]="true">
+            <div class="p-grid">
+                <div class="p-col-2">Name</div>
+                <div class="p-col-2">Brand</div>
+                <div class="p-col-2">Category</div>
+                <div class="p-col-2">Price</div>
+                <div class="p-col-2">Quantity</div>
+                <div class="p-col-2">Subtotal</div>
+            </div>
+            <div class="p-grid" *ngFor="let orderItem of order.oderItems" >
+                <div class="p-col-2">Name</div>
+                <div class="p-col-2">Brand</div>
+                <div class="p-col-2">Category</div>
+                <div class="p-col-2">Price</div>
+                <div class="p-col-2">Quantity</div>
+                <div class="p-col-2">Subtotal</div>
+            </div>
+        </p-fieldset>
+        <p-fieldset legend="Order Address" styleClass="p-mb-4" [toggleable]="true"> Content </p-fieldset>
+    </p-card>
+</div>
