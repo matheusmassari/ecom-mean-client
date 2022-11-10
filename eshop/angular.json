@@ -323,7 +323,7 @@
             "projectType": "library",
             "root": "libs/users",
             "sourceRoot": "libs/users/src",
-            "prefix": "eshop",
+            "prefix": "users",
             "architect": {
                 "build": {
                     "builder": "@nrwl/angular:ng-packagr-lite",

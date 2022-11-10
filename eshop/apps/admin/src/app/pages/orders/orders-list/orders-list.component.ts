@@ -2,29 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Order, OrdersService } from '@eshop/orders';
 import { ConfirmationService, MessageService } from 'primeng/api';
-
-const ORDER_STATUS = {
-    0: {
-        label: 'Pending',
-        color: 'primary'
-    },
-    1: {
-        label: 'Processed',
-        color: 'warning'
-    },
-    2: {
-        label: 'Shipped',
-        color: 'warning'
-    },
-    3: {
-        label: 'Delivered',
-        color: 'success'
-    },
-    4: {
-        label: 'Failed',
-        color: 'danger'
-    }
-};
+import { ORDER_STATUS } from '../order.constants';
 @Component({
     selector: 'admin-oders-list',
     templateUrl: './orders-list.component.html',
