@@ -11,17 +11,25 @@
                         <div class="p-col-12">
                             <div class="p-inputgroup">
                                 <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
-                                <input type="text" pInputText placeholder="Email" />
+                                <input type="text" formControlName="email" pInputText placeholder="Email" />
                             </div>
+                            <small *ngIf="loginForm.email.invalid && isSubmitted" class="p-error">
+                                <span *ngIf="loginForm.email.errors.required"> Please provide an email. </span>
+                                <span *ngIf="loginForm.email.errors.email">Invalid email.</span>
+                            </small>
                         </div>
                         <div class="p-col-12">
                             <div class="p-inputgroup">
                                 <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
-                                <input type="password" pInputText placeholder="Password" />
+                                <input type="password" formControlName="password" pInputText placeholder="Password" />
                             </div>
+                            <small *ngIf="loginForm.password.invalid && isSubmitted" class="p-error"> Password is required. </small>
                         </div>
                         <div class="p-col-12">
-                            <p-button label="Sign in"></p-button>
+                            <p-button label="Sign in" (onClick)="onSubmit()"></p-button>
+                        </div>
+                        <div class="p-col-12" *ngIf="isSubmitted && authError" >
+                            <small class="p-error">Invalid Credentials.</small>
                         </div>
                     </div>
                 </form>
