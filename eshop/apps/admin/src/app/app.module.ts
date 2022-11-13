@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 
 //App Modules
@@ -17,6 +17,7 @@ import { UsersListComponent } from './pages/users/users-list/users-list.componen
 import { UsersFormComponent } from './pages/users/users-form/users-form.component';
 
 //Users Module
+import { AuthGuard, JwtInterceptor } from '@eshop/users';
 import { UsersModule } from '@eshop/users';
 
 //UX Modules (PrimeNG)
@@ -46,7 +47,6 @@ import { OrdersListComponent } from './pages/orders/orders-list/orders-list.comp
 import { OrdersDetailComponent } from './pages/orders/orders-detail/orders-detail.component';
 import { FieldsetModule } from 'primeng/fieldset';
 
-
 const UX_MODULE = [
     CardModule,
     ToolbarModule,
@@ -71,6 +71,7 @@ const routes: Routes = [
     {
         path: '',
         component: ShellComponent,
+        canActivate: [AuthGuard],
         children: [
             {
                 path: 'dashboard',
@@ -151,7 +152,7 @@ const routes: Routes = [
         UsersModule,
         ...UX_MODULE
     ],
-    providers: [CategoriesService, MessageService, ConfirmationService],
+    providers: [CategoriesService, MessageService, ConfirmationService, { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

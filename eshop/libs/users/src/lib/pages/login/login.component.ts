@@ -1,7 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { LocalStorageService } from '../../services/localstorage.service';
 
 @Component({
     selector: 'users-login',
@@ -14,7 +16,7 @@ export class LoginComponent implements OnInit {
     authError = false;
     authMessage = 'Invalid credentials.';
 
-    constructor(private formBuilder: FormBuilder, private auth: AuthService) {}
+    constructor(private formBuilder: FormBuilder, private auth: AuthService, private localStorageService: LocalStorageService, private router: Router) {}
 
     ngOnInit(): void {
         this._initForm();
@@ -35,7 +37,8 @@ export class LoginComponent implements OnInit {
         this.auth.login(this.loginForm.email.value, this.loginForm.password.value).subscribe({
             next: (user) => {
                 this.authError = false;
-                console.log(user);
+                this.localStorageService.setToken(user.token);
+                this.router.navigate(['/']);
             },
             error: (error: HttpErrorResponse) => {
                 this.authError = true;
