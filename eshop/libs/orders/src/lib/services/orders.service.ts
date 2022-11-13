@@ -32,4 +32,12 @@ export class OrdersService {
     deleteOrder(orderId: string) {
         return this.http.delete(`${this.apiUrlOrders}/${orderId}`);
     }
+
+    getOrderCount(): Observable<any> {
+        return this.http.get(`${this.apiUrlOrders}/get/order-count`);
+    }
+
+    getTotalSales(): Observable<any> {
+        return this.http.get(`${this.apiUrlOrders}/get/total-sales`);
+    }
 }
