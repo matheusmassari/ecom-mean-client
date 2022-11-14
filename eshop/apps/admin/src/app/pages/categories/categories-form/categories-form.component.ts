@@ -1,22 +1,26 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CategoriesService, Category } from '@eshop/products';
 import { MessageService } from 'primeng/api';
 import { timer } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'admin-categories-form',
     templateUrl: './categories-form.component.html',
     styles: []
 })
-export class CategoriesFormComponent implements OnInit {
+export class CategoriesFormComponent implements OnInit, OnDestroy {
     form: FormGroup;
     isSubmitted = false;
     editMode = false;
     currentCategoryId: string;
     color: string;
+
+    endsubs$: Subject<any> = new Subject();
 
     constructor(
         private formBuilder: FormBuilder,
@@ -35,8 +39,12 @@ export class CategoriesFormComponent implements OnInit {
         this._checkEditMode();
     }
 
+    ngOnDestroy(): void {
+        this.endsubs$.next();
+        this.endsubs$.complete();
+    }
+
     onSubmit() {
-        console.log(this.form.invalid);
         this.isSubmitted = true;
         if (this.form.invalid) {
             return;
@@ -59,47 +67,56 @@ export class CategoriesFormComponent implements OnInit {
     }
 
     private _createCategory(category: Category) {
-        this.categoriesService.createCategory(category).subscribe(
-            (category: Category) => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Category ${category.name} added.` });
-                timer(2000)
-                    .toPromise()
-                    .then(() => {
-                        this.location.back();
-                    });
-            },
-            () => {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register category' });
-            }
-        );
+        this.categoriesService
+            .createCategory(category)
+            .pipe(takeUntil(this.endsubs$))
+            .subscribe(
+                (category: Category) => {
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: `Category ${category.name} added.` });
+                    timer(2000)
+                        .toPromise()
+                        .then(() => {
+                            this.location.back();
+                        });
+                },
+                () => {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register category' });
+                }
+            );
     }
 
     private _updateCategory(category: Category) {
-        this.categoriesService.updateCategory(category).subscribe(
-            () => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category updated.' });
-                timer(2000)
-                    .toPromise()
-                    .then((done) => {
-                        this.location.back();
-                    });
-            },
-            () => {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register category' });
-            }
-        );
+        this.categoriesService
+            .updateCategory(category)
+            .pipe(takeUntil(this.endsubs$))
+            .subscribe(
+                () => {
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category updated.' });
+                    timer(2000)
+                        .toPromise()
+                        .then((done) => {
+                            this.location.back();
+                        });
+                },
+                () => {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register category' });
+                }
+            );
     }
 
     private _checkEditMode() {
-        this.router.params.subscribe((params) => {
+        this.router.params.pipe(takeUntil(this.endsubs$)).subscribe((params) => {
             if (params.id) {
                 this.editMode = true;
                 this.currentCategoryId = params.id;
-                this.categoriesService.getSingleCategory(params.id).subscribe((category) => {
-                    this.categoryForm.name.setValue(category.name);
-                    this.categoryForm.icon.setValue(category.icon);
-                    this.categoryForm.color.setValue(category.color);
-                });
+                this.categoriesService
+                    .getSingleCategory(params.id)
+                    .pipe(takeUntil(this.endsubs$))
+                    .subscribe((category) => {
+                        this.categoryForm.name.setValue(category.name);
+                        this.categoryForm.icon.setValue(category.icon);
+                        this.categoryForm.color.setValue(category.color);
+                    });
             }
         });
     }

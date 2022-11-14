@@ -1,16 +1,18 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProductsService, CategoriesService } from '@eshop/products';
 import { MessageService } from 'primeng/api';
 import { timer } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'admin-products-form',
     templateUrl: './products-form.component.html'
 })
-export class ProductsFormComponent implements OnInit {
+export class ProductsFormComponent implements OnInit, OnDestroy {
     form: FormGroup;
     isSubmitted = false;
     editMode = false;
@@ -18,6 +20,8 @@ export class ProductsFormComponent implements OnInit {
     color: string;
     categories: any[];
     imageDisplay: string | ArrayBuffer;
+
+    endsubs$: Subject<any> = new Subject();
 
     constructor(
         private formBuilder: FormBuilder,
@@ -32,6 +36,11 @@ export class ProductsFormComponent implements OnInit {
         this._initForm();
         this._getCategories();
         this._checkEditMode();
+    }
+
+    ngOnDestroy(): void {
+        this.endsubs$.next();
+        this.endsubs$.complete();
     }
 
     private _initForm() {
@@ -66,66 +75,78 @@ export class ProductsFormComponent implements OnInit {
     }
 
     private _createProduct(productData) {
-        this.productsService.createProduct(productData).subscribe(
-            () => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product added.` });
-                timer(2000)
-                    .toPromise()
-                    .then(() => {
-                        this.location.back();
-                    });
-            },
-            () => {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register product' });
-            }
-        );
+        this.productsService
+            .createProduct(productData)
+            .pipe(takeUntil(this.endsubs$))
+            .subscribe(
+                () => {
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product added.` });
+                    timer(2000)
+                        .toPromise()
+                        .then(() => {
+                            this.location.back();
+                        });
+                },
+                () => {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register product' });
+                }
+            );
     }
 
     private _updateProduct(productData) {
-        this.productsService.updateProduct(productData, this.currentProductId).subscribe(
-            () => {
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product updated.` });
-                timer(2000)
-                    .toPromise()
-                    .then(() => {
-                        this.location.back();
-                    });
-            },
-            () => {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register product' });
-            }
-        );
+        this.productsService
+            .updateProduct(productData, this.currentProductId)
+            .pipe(takeUntil(this.endsubs$))
+            .subscribe(
+                () => {
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: `Product updated.` });
+                    timer(2000)
+                        .toPromise()
+                        .then(() => {
+                            this.location.back();
+                        });
+                },
+                () => {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong while trying to register product' });
+                }
+            );
     }
 
     private _checkEditMode() {
-        this.router.params.subscribe((params) => {
+        this.router.params.pipe(takeUntil(this.endsubs$)).subscribe((params) => {
             if (params.id) {
                 this.editMode = true;
                 this.currentProductId = params.id;
-                this.productsService.getSingleProduct(params.id).subscribe((product) => {
-                    this.productForm.name.setValue(product.name);
-                    this.productForm.brand.setValue(product.brand);
-                    this.productForm.price.setValue(product.price);
-                    this.productForm.category.setValue(product.category.id);
-                    this.productForm.countInStock.setValue(product.countInStock);
-                    this.productForm.description.setValue(product.description);
-                    this.productForm.richDescription.setValue(product.richDescription);
-                    this.productForm.isFeatured.setValue(product.isFeatured);
-                    this.imageDisplay = product.image;
-                    this.productForm.image.setValidators([]);
-                    this.productForm.image.updateValueAndValidity();
-                });
+                this.productsService
+                    .getSingleProduct(params.id)
+                    .pipe(takeUntil(this.endsubs$))
+                    .subscribe((product) => {
+                        this.productForm.name.setValue(product.name);
+                        this.productForm.brand.setValue(product.brand);
+                        this.productForm.price.setValue(product.price);
+                        this.productForm.category.setValue(product.category.id);
+                        this.productForm.countInStock.setValue(product.countInStock);
+                        this.productForm.description.setValue(product.description);
+                        this.productForm.richDescription.setValue(product.richDescription);
+                        this.productForm.isFeatured.setValue(product.isFeatured);
+                        this.imageDisplay = product.image;
+                        this.productForm.image.setValidators([]);
+                        this.productForm.image.updateValueAndValidity();
+                    });
             }
         });
     }
 
     private _getCategories() {
-        this.categoriesService.getCategories().subscribe({
-            next: (categories) => {
-                this.categories = categories;
-            },
-            error: () => alert('Something went wrong while trying to get categories.')
-        });
+        this.categoriesService
+            .getCategories()
+            .pipe(takeUntil(this.endsubs$))
+            .subscribe({
+                next: (categories) => {
+                    this.categories = categories;
+                },
+                error: () => alert('Something went wrong while trying to get categories.')
+            });
     }
 
     onImageUpload(event) {

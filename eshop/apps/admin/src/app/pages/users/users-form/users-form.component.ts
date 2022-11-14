@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UsersService, User } from '@eshop/users';
@@ -6,6 +6,8 @@ import { MessageService } from 'primeng/api';
 import { timer } from 'rxjs';
 import { Location } from '@angular/common';
 import * as countriesLib from "i18n-iso-countries";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 declare const require;
 
@@ -15,13 +17,14 @@ declare const require;
     templateUrl: './users-form.component.html',
     styleUrls: []
 })
-export class UsersFormComponent implements OnInit {
-
+export class UsersFormComponent implements OnInit, OnDestroy {
     form: FormGroup;
     isSubmitted = false;
     editMode = false;
     currentUserId: string;
     countries: any[] = [];
+
+    endsubs$: Subject<any> = new Subject();
 
     constructor(
         private formBuilder: FormBuilder,
@@ -35,6 +38,10 @@ export class UsersFormComponent implements OnInit {
         this._initForm();
         this._getCountries();
         this._checkEditMode();
+    }
+    ngOnDestroy(): void {
+        this.endsubs$.next();
+        this.endsubs$.complete();
     }
 
     private _initForm() {
@@ -53,74 +60,83 @@ export class UsersFormComponent implements OnInit {
     }
 
     private _createUser(userData: User) {
-        this.usersService.createUser(userData).subscribe(
-            (user: User) => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: `User has been created.`
-                });
-                timer(2000)
-                    .toPromise()
-                    .then(() => {
-                        this.location.back();
+        this.usersService
+            .createUser(userData)
+            .pipe(takeUntil(this.endsubs$))
+            .subscribe(
+                (user: User) => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: `User has been created.`
                     });
-            },
-            (error) => {
-                console.log(error);
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error while trying to create user. Try again later.'
-                });
-            }
-        );
+                    timer(2000)
+                        .toPromise()
+                        .then(() => {
+                            this.location.back();
+                        });
+                },
+                (error) => {
+                    console.log(error);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Error while trying to create user. Try again later.'
+                    });
+                }
+            );
     }
 
     private _updateUser(userData) {
-        console.log(userData)
-        this.usersService.updateUser(userData, this.currentUserId).subscribe(
-            () => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: 'User has been updated'
-                });
-                timer(2000)
-                    .toPromise()
-                    .then(() => {
-                        this.location.back();
+        console.log(userData);
+        this.usersService
+            .updateUser(userData, this.currentUserId)
+            .pipe(takeUntil(this.endsubs$))
+            .subscribe(
+                () => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: 'User has been updated'
                     });
-            },
-            () => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error while trying to update user. Try again later.'
-                });
-            }
-        );
+                    timer(2000)
+                        .toPromise()
+                        .then(() => {
+                            this.location.back();
+                        });
+                },
+                () => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Error while trying to update user. Try again later.'
+                    });
+                }
+            );
     }
 
     private _checkEditMode() {
-        this.router.params.subscribe((params) => {
+        this.router.params.pipe(takeUntil(this.endsubs$)).subscribe((params) => {
             if (params.id) {
                 this.editMode = true;
                 this.currentUserId = params.id;
-                this.usersService.getSingleUser(params.id).subscribe((user) => {
-                    this.userForm.name.setValue(user.name);
-                    this.userForm.email.setValue(user.email);
-                    this.userForm.phone.setValue(user.phone);
-                    this.userForm.street.setValue(user.street);
-                    this.userForm.apartment.setValue(user.apartment);
-                    this.userForm.zip.setValue(user.zip);
-                    this.userForm.city.setValue(user.city);
-                    this.userForm.country.setValue(user.country);
-                    this.userForm.isAdmin.setValue(user.isAdmin);
+                this.usersService
+                    .getSingleUser(params.id)
+                    .pipe(takeUntil(this.endsubs$))
+                    .subscribe((user) => {
+                        this.userForm.name.setValue(user.name);
+                        this.userForm.email.setValue(user.email);
+                        this.userForm.phone.setValue(user.phone);
+                        this.userForm.street.setValue(user.street);
+                        this.userForm.apartment.setValue(user.apartment);
+                        this.userForm.zip.setValue(user.zip);
+                        this.userForm.city.setValue(user.city);
+                        this.userForm.country.setValue(user.country);
+                        this.userForm.isAdmin.setValue(user.isAdmin);
 
-                    this.userForm.password.setValidators([]);
-                    this.userForm.password.updateValueAndValidity();
-                });
+                        this.userForm.password.setValidators([]);
+                        this.userForm.password.updateValueAndValidity();
+                    });
             }
         });
     }
@@ -130,7 +146,7 @@ export class UsersFormComponent implements OnInit {
         if (this.form.invalid) {
             return;
         }
-        const user: User = {            
+        const user: User = {
             name: this.userForm.name.value,
             email: this.userForm.email.value,
             phone: this.userForm.phone.value,
@@ -144,20 +160,20 @@ export class UsersFormComponent implements OnInit {
         };
         if (this.editMode) {
             this._updateUser(user);
-        } else {            
+        } else {
             this._createUser(user);
         }
     }
 
     private _getCountries() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    countriesLib.registerLocale(require('i18n-iso-countries/langs/en.json'));
-    this.countries = Object.entries(countriesLib.getNames('en', { select: 'official' })).map((entry) => {
-        return {
-            name: entry[1],
-            id: entry[0]
-        }
-    });    
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        countriesLib.registerLocale(require('i18n-iso-countries/langs/en.json'));
+        this.countries = Object.entries(countriesLib.getNames('en', { select: 'official' })).map((entry) => {
+            return {
+                name: entry[1],
+                id: entry[0]
+            };
+        });
     }
 
     get userForm() {

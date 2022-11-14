@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CategoriesService, Category } from '@eshop/products';
 import { MessageService, ConfirmationService } from 'primeng/api';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'admin-categories-list',
     templateUrl: './categories-list.component.html',
     styles: []
 })
-export class CategoriesListComponent implements OnInit {
+export class CategoriesListComponent implements OnInit, OnDestroy {
     categories: Category[] = [];
+    
+    endsubs$: Subject<any> = new Subject();
 
     constructor(
         private categoriesService: CategoriesService,
@@ -20,13 +23,21 @@ export class CategoriesListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._getCategories();
+        this._getCategories();        
+    }
+
+    ngOnDestroy(): void {
+        this.endsubs$.next();        
+        this.endsubs$.complete();
     }
 
     private _getCategories() {
-        this.categoriesService.getCategories().subscribe((categories) => {
-            this.categories = categories;
-        });
+        this.categoriesService
+            .getCategories()
+            .pipe(takeUntil(this.endsubs$))
+            .subscribe((categories) => {
+                this.categories = categories;
+            });
     }
 
     deleteCategory(_id: any) {
@@ -35,17 +46,19 @@ export class CategoriesListComponent implements OnInit {
             header: 'Delete Category',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.categoriesService.deleteCategory(_id).subscribe(
-                    () => {
-                        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category removed.' });
-                        this._getCategories();
-                    },
-                    () => {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong, try again later.' });
-                    }
-                );
-            },
-            
+                this.categoriesService
+                    .deleteCategory(_id)
+                    .pipe(takeUntil(this.endsubs$))
+                    .subscribe(
+                        () => {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category removed.' });
+                            this._getCategories();
+                        },
+                        () => {
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong, try again later.' });
+                        }
+                    );
+            }
         });
     }
 
