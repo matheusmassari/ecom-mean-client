@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getUsersCount();
         this.getProductsCount();
     }
+    
     ngOnDestroy(): void {
         this.endsubs$.next();
         this.endsubs$.complete();

@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class CategoriesListComponent implements OnInit, OnDestroy {
     categories: Category[] = [];
-    
+
     endsubs$: Subject<any> = new Subject();
 
     constructor(
@@ -23,11 +23,11 @@ export class CategoriesListComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this._getCategories();        
+        this._getCategories();
     }
 
     ngOnDestroy(): void {
-        this.endsubs$.next();        
+        this.endsubs$.next();
         this.endsubs$.complete();
     }
 

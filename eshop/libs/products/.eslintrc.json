@@ -10,7 +10,7 @@
                     "error",
                     {
                         "type": "attribute",
-                        "prefix": "eshop",
+                        "prefix": "products",
                         "style": "camelCase"
                     }
                 ],
@@ -18,10 +18,12 @@
                     "error",
                     {
                         "type": "element",
-                        "prefix": "eshop",
+                        "prefix": "products",
                         "style": "kebab-case"
                     }
-                ]
+                ],
+                "@typescript-eslint/no-empty-function": "off",
+                "@angular-eslint/no-empty-lifecycle-method": "off"
             }
         },
         {
