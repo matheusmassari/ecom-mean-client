@@ -1,0 +1,40 @@
+.banner {
+    height: 280px;
+    width: 100%;
+    background-color: #D7EFFB;
+
+    &-text {
+        color: var(--surface-700);
+        margin-top: 50px;
+
+
+        h1 {
+            margin: 0;
+            font-size: 3em;
+            font-weight: 400;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: 300;
+        }
+    }
+
+    &-button {
+        background-color: var(--surface-0);
+        color: #F9A826;
+        border: 0;
+
+        &:hover {
+            background-color: var(--surface-700) !important;
+            color: var(--surface-0) !important;
+            border: 0;
+        }
+    }
+
+    img {
+        width: 250px;
+        height: 250px;        
+    }
+}

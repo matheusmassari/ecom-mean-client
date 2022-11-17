@@ -1,0 +1,12 @@
+<div class="categories-banner">
+    <h2 style="font-weight: 400; text-align: center">Busca por Categoria</h2>
+    <div class="p-grid p-px-5 p-mt-4">
+        <div class="p-col-4 p-mt-3" *ngFor="let category of categories">
+            <div class="category" [routerLink]="'/products/category/' + category._id">
+                <img src="{{ category.icon }}" alt="asas"  />
+                <h3 style="font-weight: 400">{{ category.name }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+

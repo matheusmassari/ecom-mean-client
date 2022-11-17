@@ -1,0 +1,24 @@
+img {
+    height: 6rem;
+    // margin-left: 3.5rem;
+    filter: invert(36%) sepia(30%) saturate(0%) hue-rotate(251deg) brightness(95%) contrast(90%);
+}
+h2 {
+    color: var(--surface-700);
+}
+
+.category {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 250ms;
+    &:hover {
+        transform: translateY(-10px);
+    }
+}
+.categories-banner {
+    margin: 0 auto;
+    max-width: 1000px;
+}
