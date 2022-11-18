@@ -18,6 +18,10 @@ export class ProductsService {
         return this.http.get<Product[]>(this.apiUrlProducts);
     }
 
+    getFeaturedProducts(): Observable<Product[]> {
+        return this.http.get<Product[]>(`${this.apiUrlProducts}/get/featured/6`);
+    }
+
     getSingleProduct(productId: any): Observable<Product> {
         return this.http.get<Product>(`${this.apiUrlProducts}/${productId}`);
     }

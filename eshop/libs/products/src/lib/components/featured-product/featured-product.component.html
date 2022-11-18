@@ -1,0 +1,23 @@
+<div class="carousel-container">
+    <h2>Produtos em Destaque</h2>
+    <p-carousel [value]="featuredProducts" [numVisible]="3" [numScroll]="3" [circular]="false" [responsiveOptions]="responsiveOptions">
+        <ng-template let-product pTemplate="item">
+            <div class="product-item">
+                <div class="product-item-content" [routerLink]="'/products/' + product._id">
+                    <div class="mb-3">
+                        <img src="assets/svg-icons/box-placeholder.svg" [alt]="product.name" class="product-image" />
+                    </div>
+                    <div>
+                        <h4 class="mb-1" style="font-family: 'Montserrat' !important; font-weight: 400">{{ product.name }}</h4>
+                        <h3 class="mt-0 mb-3" style="font-family: 'Montserrat' !important; font-weight: 400">${{ product.price }}</h3>
+                        <span>{{ product.inventoryStatus }}</span>
+                        <div class="car-buttons mt-5">
+                            <p-button type="button" styleClass="p-button p-button-rounded p-mr-2 featured-button" icon="pi pi-search"></p-button>
+                            <p-button type="button" styleClass="p-button p-button-rounded featured-button" icon="pi pi-shopping-cart"></p-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </p-carousel>
+</div>
