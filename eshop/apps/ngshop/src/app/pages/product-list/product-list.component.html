@@ -1,1 +1,14 @@
-<p>product-list works!</p>
+<div class="products-page p-px-5">
+    <div class="p-grid">
+        <div class="p-col-3">
+            <h4>Categories</h4>
+        </div>
+        <div class="p-col-9">
+            <div class="p-grid" *ngIf="products" >
+                <div class="p-col-4" *ngFor="let product of products">
+                    <products-product-item [product]="product" ></products-product-item>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
