@@ -12,10 +12,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     categories: any = [];
     endsubs$: Subject<any> = new Subject();
 
-    constructor(
-      private productsService: ProductsService, 
-      private categoriesService: CategoriesService
-      ) {}
+    constructor(private productsService: ProductsService, private categoriesService: CategoriesService) {}
 
     ngOnInit(): void {
         this._getProducts();
@@ -27,9 +24,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
         this.endsubs$.complete();
     }
 
-    private _getProducts() {
+    private _getProducts(categoriesFilter?: string[]) {
         this.productsService
-            .getProducts()
+            .getProducts(categoriesFilter)
             .pipe(takeUntil(this.endsubs$))
             .subscribe((products) => {
                 this.products = products;
@@ -43,5 +40,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
             .subscribe((categories) => {
                 this.categories = categories;
             });
+    }
+
+    categoryFilter() {
+        const selectedCategories = this.categories
+        .filter((category) => category.checked)
+        .map((category) => category._id);
+        this._getProducts(selectedCategories);
     }
 }

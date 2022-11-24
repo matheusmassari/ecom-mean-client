@@ -1,3 +1,13 @@
 .products-page {
     min-height: 100vh;
+    font-family: "Montserrat", sans-serif;
+    h4 {
+        font-weight: 600;
+    }
+}
+
+.checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

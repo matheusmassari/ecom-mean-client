@@ -10,8 +10,14 @@ import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { AccordionModule } from 'primeng/accordion';
 import { NavComponent } from './shared/nav/nav.component';
+
+// Internal project imports
 import { ProductsModule } from '@eshop/products';
 import { UiModule } from '@eshop/ui';
+
+// PrimeNG
+import { CheckboxModule } from 'primeng/checkbox';
+import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
     {
@@ -26,7 +32,7 @@ const routes: Routes = [
 
 @NgModule({
     declarations: [AppComponent, ProductListComponent, HomePageComponent, HeaderComponent, FooterComponent, NavComponent],
-    imports: [BrowserModule, RouterModule.forRoot(routes), AccordionModule, BrowserAnimationsModule, ProductsModule, UiModule],
+    imports: [BrowserModule, RouterModule.forRoot(routes), AccordionModule, BrowserAnimationsModule, ProductsModule, UiModule, CheckboxModule, FormsModule],
     providers: [],
     bootstrap: [AppComponent]
 })
