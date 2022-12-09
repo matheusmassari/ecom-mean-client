@@ -1,21 +1,21 @@
 <div class="products-page p-px-5">
+    <div class="message" *ngIf="noProducts()">
+        <div *ngIf="!isLoading" >
+            <img src="assets/images/no-data.svg" alt="Not found." />
+            <h3>Couldn't find any products :(</h3>
+        </div>
+    </div>
     <div class="p-grid">
-        <div class="p-col-3">
+        <div class="p-col-3" *ngIf="!isCategoryPage">
             <h4>Categorias</h4>
             <div class="p-field checkbox" *ngFor="let category of categories">
-                <p-checkbox 
-                [(ngModel)]="category.checked" 
-                [binary]="true" 
-                [inputId]="category._id" 
-                (onChange)="categoryFilter()"
-                >
-                </p-checkbox>
-                <label for="{{ category._id }}" class="p-px-2 p-mt-2" >{{ category.name }}</label>
+                <p-checkbox [(ngModel)]="category.checked" [binary]="true" [inputId]="category._id" (onChange)="categoryFilter()"> </p-checkbox>
+                <label for="{{ category._id }}" class="p-px-2 p-mt-2">{{ category.name }}</label>
             </div>
         </div>
-        <div class="p-col-9">
+        <div [class]="isCategoryPage ? 'p-col-12' : 'p-col-9'">
             <div class="p-grid" *ngIf="products">
-                <div class="p-col-4" *ngFor="let product of products">
+                <div [class]="isCategoryPage ? 'p-col-3' : 'p-col-4'" *ngFor="let product of products">
                     <products-product-item [product]="product"></products-product-item>
                 </div>
             </div>
