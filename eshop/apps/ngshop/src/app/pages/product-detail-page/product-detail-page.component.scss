@@ -1,0 +1,37 @@
+.product-quantity {
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--surface-300);
+}
+
+.product-price {
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+.price-before {
+    font-size: 0.7em;
+    margin-left: 10px;
+    color: var(--surface-500);
+    text-decoration: line-through;
+}
+
+.rich-description {
+    line-height: 1.6;
+}
+
+// :host ::ng-deep .input-buttons {
+//     .p-button {
+//         background: #f9a826;
+//         border: #f9a826;
+//     }
+// }
+
+// .p-button {
+//     background: #f9a826;
+//     border: #f9a826;
+
+//     &:hover {
+//         background: #f9a826;
+//         border: #f9a826;
+//     }
+// }

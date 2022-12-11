@@ -18,6 +18,10 @@ import { UiModule } from '@eshop/ui';
 // PrimeNG
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
+import { ProductDetailPageComponent } from './pages/product-detail-page/product-detail-page.component';
+import { RatingModule } from 'primeng/rating';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ButtonModule } from 'primeng/button';
 
 const routes: Routes = [
     {
@@ -29,15 +33,40 @@ const routes: Routes = [
         component: ProductListComponent
     },
     {
+        path: 'products/:productId',
+        component: ProductDetailPageComponent
+    },
+    {
         path: 'category/:categoryId',
         component: ProductListComponent
     }
 ];
 
 @NgModule({
-    declarations: [AppComponent, ProductListComponent, HomePageComponent, HeaderComponent, FooterComponent, NavComponent],
-    imports: [BrowserModule, RouterModule.forRoot(routes), AccordionModule, BrowserAnimationsModule, ProductsModule, UiModule, CheckboxModule, FormsModule],
+    declarations: [
+        AppComponent,
+        ProductListComponent,
+        HomePageComponent,
+        HeaderComponent,
+        FooterComponent,
+        NavComponent,
+        ProductDetailPageComponent
+    ],
+    imports: [
+        BrowserModule,
+        RouterModule.forRoot(routes),
+        AccordionModule,
+        BrowserAnimationsModule,
+        ProductsModule,
+        UiModule,
+        CheckboxModule,
+        FormsModule,
+        RatingModule,
+        InputNumberModule,
+        ButtonModule
+    ],
     providers: [],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    exports: [ProductDetailPageComponent]
 })
 export class AppModule {}

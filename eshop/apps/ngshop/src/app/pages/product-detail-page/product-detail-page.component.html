@@ -1,0 +1,55 @@
+<div class="products-page p-px-5">
+    <div class="p-grid">
+        <div class="p-col-6">
+            <!-- <ui-gallery></ui-gallery> -->
+        </div>
+        <div class="p-col-6 product" *ngIf="product">
+            <h2 class="product-name">{{ product.name }}</h2>
+            <p class="product-description">{{ product.description }}</p>
+            <div class="product-rating">
+                <p-rating
+                    [(ngModel)]="product.rating"
+                    [cancel]="false"
+                    [disabled]="true"></p-rating>
+            </div>
+            <div class="product-price p-mt-3">
+                {{ product.price | currency }}
+                <span class="price-before">{{
+                    product.price + 26 | currency
+                }}</span>
+            </div>
+            <div class="product-quantity p-mt-4">
+                <label for="quantity">Quantity</label> <br />
+                <p-inputNumber
+                    [(ngModel)]="quantity"
+                    mode="decimal"
+                    [showButtons]="true"
+                    inputId="quantity"
+                    [min]="0"
+                    [max]="100"
+                    styleClass="input-buttons">
+                </p-inputNumber>
+            </div>
+            <div class="product-action p-mt-4">
+                <button
+                    pRipple
+                    pButton
+                    type="button"
+                    label="Buy Now"
+                    class="p-button-rounded p-mr-2"></button>
+                <button
+                    pRipple
+                    pButton
+                    type="button"
+                    label="Add to Cart"
+                    class="p-button-rounded p-mr-2"
+                    (onClick)="addToCart()"></button>
+            </div>
+        </div>
+    </div>
+    <div class="p-grid rich-description">
+        <div class="p-col-12">
+            <div [innerHTML]="product.richDescription"></div>
+        </div>
+    </div>
+</div>
